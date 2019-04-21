@@ -1,8 +1,8 @@
 {
 	"description": "A Simple but Powerful Flat File Database Storage.",
 	"keywords": ["fork", "filebase", "key-value","file-files", "flat", "file", "database", "document", "flat-file", "serverless"],
-	"name": "dobrebydlo/filebase",
-	"homepage": "https://github.com/dobrebydlo/Filebase",
+	"name": "dobrebydlo/ffdb",
+	"homepage": "https://github.com/dobrebydlo/ffdb",
 	"type": "package",
 	"licence": "MIT",
 	"authors": [
@@ -32,7 +32,7 @@
 
 	"autoload": {
 		"psr-4": {
-			"Dobrebydlo\\Filebase\\": "src/"
+			"Ffdb\\": "src/"
 		}
 	}
 }

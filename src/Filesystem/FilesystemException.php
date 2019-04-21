@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase\Filesystem;
+<?php namespace Ffdb\Filesystem;
 
 class FilesystemException extends \Exception
 {

@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 use Filebase\SortLogic;
 
@@ -8,14 +8,14 @@ class QueryLogic
     /**
      * $database
      *
-     * Dobrebydlo\Filebase\Database
+     * Ffdb\Database
      */
     protected $database;
 
     /**
      * $predicate
      *
-     * \Dobrebydlo\Filebase\Predicate
+     * \Ffdb\Predicate
      */
     protected $predicate;
 
@@ -23,7 +23,7 @@ class QueryLogic
     /**
      * $cache
      *
-     * \Dobrebydlo\Filebase\Cache
+     * \Ffdb\Cache
      */
     protected $cache = false;
 

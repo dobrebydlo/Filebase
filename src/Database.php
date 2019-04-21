@@ -1,10 +1,10 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 use Exception;
-use DobreBydlo\Filebase\Format\EncodingException;
-use DobreBydlo\Filebase\Filesystem\SavingException;
-use DobreBydlo\Filebase\Filesystem\ReadingException;
-use DobreBydlo\Filebase\Filesystem\FilesystemException;
+use Ffdb\Format\EncodingException;
+use Ffdb\Filesystem\SavingException;
+use Ffdb\Filesystem\ReadingException;
+use Ffdb\Filesystem\FilesystemException;
 
 class Database
 {
@@ -21,7 +21,7 @@ class Database
      * $config
      *
      * Stores all the configuration object settings
-     * \Dobrebydlo\Filebase\Config
+     * \Ffdb\Config
      */
     protected $config;
 
@@ -108,7 +108,7 @@ class Database
      *
      * @param mixed $id
      *
-     * @return \Dobrebydlo\Filebase\Document object
+     * @return \Ffdb\Document object
      * @throws ReadingException
      */
     public function get($id)
@@ -157,7 +157,7 @@ class Database
      *
      * @param string $location (optional)
      *
-     * @return \Dobrebydlo\Filebase\Backup object
+     * @return \Ffdb\Backup object
      * @throws Exception
      */
     public function backup($location = '')
@@ -172,10 +172,10 @@ class Database
     /**
      * set
      *
-     * @param $document \Dobrebydlo\Filebase\Document object
+     * @param $document \Ffdb\Document object
      * @param mixed $data should be an array
      *
-     * @return \Dobrebydlo\Filebase\Document object
+     * @return \Ffdb\Document object
      */
     public function set(Document $document, $data)
     {
@@ -288,7 +288,7 @@ class Database
     /**
      * delete
      *
-     * @param $document \Dobrebydlo\Filebase\Document object
+     * @param $document \Ffdb\Document object
      * @return bool true/false if file was deleted
      * @throws Exception
      */
@@ -368,7 +368,7 @@ class Database
     /**
      * toArray
      *
-     * @param \Dobrebydlo\Filebase\Document
+     * @param \Ffdb\Document
      * @return array
      */
     public function toArray(Document $document)

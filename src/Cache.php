@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 
 class Cache
@@ -7,7 +7,7 @@ class Cache
     /**
      * $database
      *
-     * \Dobrebydlo\Filebase\Database
+     * \Ffdb\Database
      */
     protected $database;
 
@@ -15,7 +15,7 @@ class Cache
     /**
      * $cache_database
      *
-     * \Dobrebydlo\Filebase\Database
+     * \Ffdb\Database
      */
     protected $cache_database;
 
@@ -34,7 +34,7 @@ class Cache
     {
         $this->database = $database;
 
-        $this->cache_database = new \Dobrebydlo\Filebase\Database([
+        $this->cache_database = new \Ffdb\Database([
             'dir' => $this->database->getConfig()->dir . '/__cache',
             'cache' => false,
             'pretty' => false

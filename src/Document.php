@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 class Document implements \ArrayAccess
 {
@@ -42,8 +42,8 @@ class Document implements \ArrayAccess
      *
      * @param mixed $data (optional, only if you want to "replace" entire doc data)
      * @return bool|Document
-     * @throws \DobreBydlo\Filebase\Filesystem\SavingException
-     * @see \Dobrebydlo\Filebase\Database save()
+     * @throws \Ffdb\Filesystem\SavingException
+     * @see \Ffdb\Database save()
      */
     public function save($data = '')
     {
@@ -59,7 +59,7 @@ class Document implements \ArrayAccess
      *
      * @return bool
      * @throws \Exception
-     * @see \Dobrebydlo\Filebase\Database delete()
+     * @see \Ffdb\Database delete()
      */
     public function delete()
     {

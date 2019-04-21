@@ -6,6 +6,7 @@ Change Log
 * Added PicoCMS file format
 * Started adapting the code style to comply with PSR-2
 * Backwards compatibility broken
+* Renamed the project
 
 ### 02/24/2019 - 1.0.24
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/50) Fixed [bug](https://github.com/filebase/Filebase/issues/41) returning unexpected results.

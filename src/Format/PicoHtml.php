@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase\Format;
+<?php namespace Ffdb\Format;
 
 use Symfony\Component\Yaml\Yaml as YamlParser;
 

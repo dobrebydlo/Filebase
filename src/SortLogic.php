@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 /**
  * Recursive sort logic class

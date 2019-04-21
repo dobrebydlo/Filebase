@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 
 class Validate
@@ -67,7 +67,7 @@ class Validate
      * @param $key
      * @param $rules
      * @param $object
-     * @return \Dobrebydlo\Filebase\Document Object
+     * @return \Ffdb\Document Object
      * @throws \Exception
      */
     protected static function validateRules($document, $key, $rules, $object)

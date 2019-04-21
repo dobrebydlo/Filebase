@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase\Format;
+<?php namespace Ffdb\Format;
 
 class FormatException extends \Exception
 {

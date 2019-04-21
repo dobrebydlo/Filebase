@@ -1,4 +1,4 @@
-# Filebase
+# FFDB - Flat file database
 
 A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/dobrebydlo/Filebase#2-formatting) the way you like).
 
@@ -37,7 +37,7 @@ If you do not want to use composer, download the files, and include it within yo
 
 ```php
 // setting the access and configration to your database
-$database = new \Dobrebydlo\Filebase\Database([
+$database = new \Ffdb\Database([
     'dir' => 'path/to/database/dir'
 ]);
 
@@ -81,10 +81,10 @@ The config is *required* when defining your database. The options are *optional*
 Usage Example (all options)
 
 ```php
-$db = new \Dobrebydlo\Filebase\Database([
+$db = new \Ffdb\Database([
     'dir'            => 'path/to/database/dir',
     'backupLocation' => 'path/to/database/backup/dir',
-    'format'         => \Dobrebydlo\Filebase\Format\Json::class,
+    'format'         => \Ffdb\Format\Json::class,
     'cache'          => true,
     'cache_expires'  => 1800,
     'pretty'         => true,
@@ -103,7 +103,7 @@ $db = new \Dobrebydlo\Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`backupLocation`   |string		|current directory (`/backups`)         |The directory where the backup zip files will be stored. 	    |
-|`format`			|object		|`\Dobrebydlo\Filebase\Format\Json`   |The format class used to encode/decode data				|
+|`format`			|object		|`\Ffdb\Format\Json`   |The format class used to encode/decode data				|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/dobrebydlo/Filebase#6-validation-optional) for more details |
 |`cache`			|bool		|true   |Stores [query](https://github.com/dobrebydlo/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
@@ -116,16 +116,16 @@ $db = new \Dobrebydlo\Filebase\Database([
 
 Format Class is what defines the encoding and decoding of data within your database files.
 
-You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Dobrebydlo\Filebase\Format\FormatInterface`
+You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Ffdb\Format\FormatInterface`
 
 The Default Format Class: `JSON`
 ```php
-\Dobrebydlo\Filebase\Format\Json::class
+\Ffdb\Format\Json::class
 ```
 
 Additional Format Classes: `Yaml`
 ```php
-\Dobrebydlo\Filebase\Format\Yaml::class
+\Ffdb\Format\Yaml::class
 ```
 
 ## (3) GET (and methods)
@@ -143,7 +143,7 @@ $item = $db->get($userId);
 
 ```
 
-`get()` returns `\Dobrebydlo\Filebase\Document` object and has its own methods which you can call.
+`get()` returns `\Ffdb\Document` object and has its own methods which you can call.
 
 |Method|Details|
 |---|---|
@@ -209,7 +209,7 @@ $item->delete();
 ## (5) Database Methods
 
 ```php
-$db = new \Dobrebydlo\Filebase\Database($config);
+$db = new \Ffdb\Database($config);
 ```
 
 Here is a list of methods you can use on the database class.
@@ -230,7 +230,7 @@ Here is a list of methods you can use on the database class.
 Examples
 
 ```php
-$users = new \Dobrebydlo\Filebase\Database([
+$users = new \Ffdb\Database([
     'dir' => '/storage/users',
 ]);
 
@@ -264,7 +264,7 @@ When invoking `save()` method, the document will be checked for validation rules
 These rules MUST pass in order for the document to save.
 
 ```php
-$db = new \Dobrebydlo\Filebase\Database([
+$db = new \Ffdb\Database([
     'dir' => '/path/to/database/dir',
     'validate' => [
         'name'   => [
@@ -479,7 +479,7 @@ These methods can be used when invoking `backup()` on your `Database`.
 
 ```php
 // invoke your database
-$database = new \Dobrebydlo\Filebase\Database([
+$database = new \Ffdb\Database([
     'dir' => '/storage/users',
     'backupLocation' => '/storage/backup',
 ]);

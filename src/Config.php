@@ -1,8 +1,8 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 
-use Dobrebydlo\Filebase\Format\FormatInterface;
-use Dobrebydlo\Filebase\Format\Json;
+use Ffdb\Format\FormatInterface;
+use Ffdb\Format\Json;
 
 class Config
 {

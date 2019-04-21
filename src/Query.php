@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 
 class Query extends QueryLogic
@@ -194,7 +194,7 @@ class Query extends QueryLogic
     /**
      * toArray
      *
-     * @param \Dobrebydlo\Filebase\Document
+     * @param \Ffdb\Document
      * @return array
      */
     public function toArray()

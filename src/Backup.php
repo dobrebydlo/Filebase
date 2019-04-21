@@ -1,4 +1,4 @@
-<?php namespace Dobrebydlo\Filebase;
+<?php namespace Ffdb;
 
 
 class Backup
@@ -16,14 +16,14 @@ class Backup
      * $config
      *
      * Stores all the configuration object settings
-     * \Dobrebydlo\Filebase\Config
+     * \Ffdb\Config
      */
     protected $config;
 
     /**
      * $database
      *
-     * \Dobrebydlo\Filebase\Database
+     * \Ffdb\Database
      */
     protected $database;
 
