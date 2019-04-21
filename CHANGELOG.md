@@ -1,6 +1,6 @@
 Change Log
 ==========
-### 04/21/2019 - 1.1
+### 04/21/2019 - 1.1.0
 * Added support for nested directories and names containing slashes
 * Made format interface stricter and modified the existing formats to comply with it
 * Added PicoCMS file format

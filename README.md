@@ -1,8 +1,6 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0) [![Slack](http://timothymarois.com/a/slack-02.svg)](https://join.slack.com/t/basephp/shared_invite/enQtNDI0MzQyMDE0MDAwLWU3Nzg0Yjk4MjM0OWVmZDZjMjEyYWE2YjA1ODFhNjI2MzI3MjAyOTIyOTRkMmVlNWNhZWYzMTIwZDJlOWQ2ZTA)
-
-A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/filebase/Filebase#2-formatting) the way you like).
+A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/dobrebydlo/Filebase#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases.
 
@@ -10,19 +8,19 @@ Doesn't that sound awesome?
 
 With Filebase, you are in complete control. Design your data structure the way you want. Use arrays and objects like you know how in PHP. Update and share your data with others and teams using version control. Just remember, upgrading your web/apache server is a lot less than your database server.
 
-Works with **PHP 5.6** and **PHP 7+**
+Works with **PHP 7.1.3+**
 
 ### Features
 
 Filebase is simple by design, but has enough features for the more advanced.
 
 * Key/Value and Array-based Data Storing
-* [Querying data](https://github.com/filebase/Filebase#8-queries)
-* [Custom filters](https://github.com/filebase/Filebase#7-custom-filters)
-* [Caching](https://github.com/filebase/Filebase#9-caching) (queries)
-* [Database Backups](https://github.com/filebase/Filebase#10-database-backups)
-* [Formatting](https://github.com/filebase/Filebase#2-formatting) (encode/decode)
-* [Validation](https://github.com/filebase/Filebase#6-validation-optional) (on save)
+* [Querying data](https://github.com/dobrebydlo/Filebase#8-queries)
+* [Custom filters](https://github.com/dobrebydlo/Filebase#7-custom-filters)
+* [Caching](https://github.com/dobrebydlo/Filebase#9-caching) (queries)
+* [Database Backups](https://github.com/dobrebydlo/Filebase#10-database-backups)
+* [Formatting](https://github.com/dobrebydlo/Filebase#2-formatting) (encode/decode)
+* [Validation](https://github.com/dobrebydlo/Filebase#6-validation-optional) (on save)
 * CRUD (method APIs)
 * File locking (on save)
 * Intuitive Method Naming
@@ -31,7 +29,7 @@ Filebase is simple by design, but has enough features for the more advanced.
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Run `composer require filebase/filebase:^1.0`
+Run `composer require dobrebydlo/filebase:^1.0`
 
 If you do not want to use composer, download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 
@@ -39,7 +37,7 @@ If you do not want to use composer, download the files, and include it within yo
 
 ```php
 // setting the access and configration to your database
-$database = new \Filebase\Database([
+$database = new \Dobrebydlo\Filebase\Database([
     'dir' => 'path/to/database/dir'
 ]);
 
@@ -83,10 +81,10 @@ The config is *required* when defining your database. The options are *optional*
 Usage Example (all options)
 
 ```php
-$db = new \Filebase\Database([
+$db = new \Dobrebydlo\Filebase\Database([
     'dir'            => 'path/to/database/dir',
     'backupLocation' => 'path/to/database/backup/dir',
-    'format'         => \Filebase\Format\Json::class,
+    'format'         => \Dobrebydlo\Filebase\Format\Json::class,
     'cache'          => true,
     'cache_expires'  => 1800,
     'pretty'         => true,
@@ -105,9 +103,9 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`backupLocation`   |string		|current directory (`/backups`)         |The directory where the backup zip files will be stored. 	    |
-|`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/filebase/Filebase#6-validation-optional) for more details |
-|`cache`			|bool		|true   |Stores [query](https://github.com/filebase/Filebase#8-queries) results into cache for faster loading.				|
+|`format`			|object		|`\Dobrebydlo\Filebase\Format\Json`   |The format class used to encode/decode data				|
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/dobrebydlo/Filebase#6-validation-optional) for more details |
+|`cache`			|bool		|true   |Stores [query](https://github.com/dobrebydlo/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
 |`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name (added: 1.0.13)   |
@@ -118,16 +116,16 @@ $db = new \Filebase\Database([
 
 Format Class is what defines the encoding and decoding of data within your database files.
 
-You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
+You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Dobrebydlo\Filebase\Format\FormatInterface`
 
 The Default Format Class: `JSON`
 ```php
-\Filebase\Format\Json::class
+\Dobrebydlo\Filebase\Format\Json::class
 ```
 
 Additional Format Classes: `Yaml`
 ```php
-\Filebase\Format\Yaml::class
+\Dobrebydlo\Filebase\Format\Yaml::class
 ```
 
 ## (3) GET (and methods)
@@ -145,7 +143,7 @@ $item = $db->get($userId);
 
 ```
 
-`get()` returns `\Filebase\Document` object and has its own methods which you can call.
+`get()` returns `\Dobrebydlo\Filebase\Document` object and has its own methods which you can call.
 
 |Method|Details|
 |---|---|
@@ -157,7 +155,7 @@ $item = $db->get($userId);
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
 |`isCache()`                      | (true/false) if the current document is loaded from cache |
-|`filter()`                       | Refer to the [Custom Filters](https://github.com/filebase/Filebase#7-custom-filters) |
+|`filter()`                       | Refer to the [Custom Filters](https://github.com/dobrebydlo/Filebase#7-custom-filters) |
 
 Example:
 
@@ -211,7 +209,7 @@ $item->delete();
 ## (5) Database Methods
 
 ```php
-$db = new \Filebase\Database($config);
+$db = new \Dobrebydlo\Filebase\Database($config);
 ```
 
 Here is a list of methods you can use on the database class.
@@ -219,20 +217,20 @@ Here is a list of methods you can use on the database class.
 |Method|Details|
 |---|---|
 |`version()`                      | Current version of your Filebase library |
-|`get($id)`                       | Refer to [get()](https://github.com/filebase/Filebase#3-get-and-methods) |
+|`get($id)`                       | Refer to [get()](https://github.com/dobrebydlo/Filebase#3-get-and-methods) |
 |`has($id)`                       | Check if a record exist returning true/false |
 |`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents. |
 |`flushCache()`                   | Clears all the cache |
 |`truncate()`                     | Deletes all documents. Alias of `flush(true)` |
-|`query()`                        | Refer to the [Queries](https://github.com/filebase/Filebase#8-queries) |
-|`backup()`                       | Refer to the [Backups](https://github.com/filebase/Filebase#10-database-backups) |
+|`query()`                        | Refer to the [Queries](https://github.com/dobrebydlo/Filebase#8-queries) |
+|`backup()`                       | Refer to the [Backups](https://github.com/dobrebydlo/Filebase#10-database-backups) |
 
 Examples
 
 ```php
-$users = new \Filebase\Database([
+$users = new \Dobrebydlo\Filebase\Database([
     'dir' => '/storage/users',
 ]);
 
@@ -266,7 +264,7 @@ When invoking `save()` method, the document will be checked for validation rules
 These rules MUST pass in order for the document to save.
 
 ```php
-$db = new \Filebase\Database([
+$db = new \Dobrebydlo\Filebase\Database([
     'dir' => '/path/to/database/dir',
     'validate' => [
         'name'   => [
@@ -481,7 +479,7 @@ These methods can be used when invoking `backup()` on your `Database`.
 
 ```php
 // invoke your database
-$database = new \Filebase\Database([
+$database = new \Dobrebydlo\Filebase\Database([
     'dir' => '/storage/users',
     'backupLocation' => '/storage/backup',
 ]);
@@ -514,25 +512,10 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 Versions are as follows: Major.Minor.Patch
 
 * Major: Rewrites with completely new code-base.
-* Minor: New Features/Changes that breaks compatibility.
-* Patch: New Features/Fixes that does not break compatibility.
+* Minor: New Features/Changes that break compatibility.
+* Patch: New Features/Fixes that do not break compatibility.
 
 Filebase will work-hard to be **backwards-compatible** when possible.
-
-
-## Sites and Users of Filebase
-
-* [Grayscale Inc](https://grayscale.com)
-* [VIP Auto](http://vipautoli.com)
-* [Ideal Internet](http://idealinternet.com)
-* [OnlineFun](http://onlinefun.com)
-* [PuzzlePlay](http://puzzleplay.com)
-* [Square Media LLC](http://squaremedia.com)
-* [My Map Directions](https://mymapdirections.com)
-* [Discount Savings](https://discount-savings.com)
-* [Vivint - Smart Homes](http://smarthomesecurityplans.com/)
-
-*If you are using Filebase – send in a pull request and we will add your project here.*
 
 
 ## Contributions
