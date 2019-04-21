@@ -1,5 +1,11 @@
 Change Log
 ==========
+### 04/21/2019 - 1.1
+* Added support for nested directories and names containing slashes
+* Made format interface stricter and modified the existing formats to comply with it
+* Added PicoCMS file format
+* Started adapting the code style to comply with PSR-2
+* Backwards compatibility broken
 
 ### 02/24/2019 - 1.0.24
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/50) Fixed [bug](https://github.com/filebase/Filebase/issues/41) returning unexpected results.
