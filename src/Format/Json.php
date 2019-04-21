@@ -1,4 +1,4 @@
-<?php  namespace Filebase\Format;
+<?php namespace Dobrebydlo\Filebase\Format;
 
 
 class Json implements FormatInterface
@@ -6,7 +6,7 @@ class Json implements FormatInterface
     /**
      * @return string
      */
-    public static function getFileExtension()
+    public static function getFileExtension(): string
     {
         return 'json';
     }
@@ -17,14 +17,14 @@ class Json implements FormatInterface
      * @return string
      * @throws FormatException
      */
-    public static function encode($data = [], $pretty = true)
+    public static function encode(?array $data = [], bool $pretty = true): string
     {
         $options = 0;
         if ($pretty == true) {
-            $options = JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE;
+            $options = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         }
 
-        $encoded = json_encode($data, $options);
+        $encoded = json_encode((array)$data, $options);
         if ($encoded === false) {
             throw new EncodingException(
                 "json_encode: '" . json_last_error_msg() . "'",
@@ -34,27 +34,34 @@ class Json implements FormatInterface
             );
         }
 
-        return $encoded;
+        return (string)$encoded;
     }
 
     /**
-     * @param $data
-     * @return mixed
+     * @param string $data
+     * @return array
      * @throws FormatException
      */
-    public static function decode($data)
+    public static function decode(?string $data): array
     {
-        $decoded = json_decode($data, true);
+        if ($data === null || mb_strlen($data = trim($data)) === 0) {
 
-        if ($data !== false && $decoded === null) {
-            throw new DecodingException(
-                "json_decode: '" . json_last_error_msg() . "'",
-                0,
-                null,
-                $data
-            );
+            throw new DecodingException('Empty data');
+
+        } else {
+
+            $decoded = json_decode($data, true);
+
+            if ($decoded === null) {
+                throw new DecodingException(
+                    "json_decode: '" . json_last_error_msg() . "'",
+                    0,
+                    null,
+                    $data
+                );
+            }
         }
 
-        return $decoded;
+        return isset($decoded) && is_array($decoded) ? $decoded : [];
     }
 }

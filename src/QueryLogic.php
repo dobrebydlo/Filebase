@@ -1,4 +1,4 @@
-<?php  namespace Filebase;
+<?php namespace Dobrebydlo\Filebase;
 
 use Filebase\SortLogic;
 
@@ -6,99 +6,91 @@ class QueryLogic
 {
 
     /**
-    * $database
-    *
-    * \Filebase\Database
-    */
+     * $database
+     *
+     * Dobrebydlo\Filebase\Database
+     */
     protected $database;
 
     /**
-    * $predicate
-    *
-    * \Filebase\Predicate
-    */
+     * $predicate
+     *
+     * \Dobrebydlo\Filebase\Predicate
+     */
     protected $predicate;
 
 
     /**
-    * $cache
-    *
-    * \Filebase\Cache
-    */
+     * $cache
+     *
+     * \Dobrebydlo\Filebase\Cache
+     */
     protected $cache = false;
 
     /**
-    * __construct
-    *
-    */
+     * __construct
+     *
+     */
     public function __construct(Database $database)
     {
-        $this->database  = $database;
+        $this->database = $database;
         $this->predicate = new Predicate();
 
-        if ($this->database->getConfig()->cache===true)
-        {
+        if ($this->database->getConfig()->cache === true) {
             $this->cache = new Cache($this->database);
         }
     }
 
     /**
-    * loadDocuments
-    *
-    */
+     * loadDocuments
+     *
+     */
     private function loadDocuments()
     {
         $predicates = $this->predicate->get();
 
-        if ($this->cache===false)
-        {
-            $this->documents = $this->database->findAll(true,false);
+        if ($this->cache === false) {
+            $this->documents = $this->database->findAll(true, false);
             return $this;
         }
 
         $this->cache->setKey(json_encode($predicates));
 
-        if ($cached_documents = $this->cache->get())
-        {
+        if ($cached_documents = $this->cache->get()) {
             $this->documents = $cached_documents;
 
             $this->sort();
             $this->offsetLimit();
             return $this;
         }
-        $this->documents = $this->database->findAll(true,false);
+        $this->documents = $this->database->findAll(true, false);
         return $this;
     }
 
     /**
-    * run
-    *
-    */
+     * run
+     *
+     */
     public function run()
     {
         $predicates = $this->predicate->get();
-        $this->documents  = [];
+        $this->documents = [];
         $cached_documents = false;
 
-        if (empty($predicates))
-        {
+        if (empty($predicates)) {
             $predicates = 'findAll';
         }
 
         $this->loadDocuments();
 
-        if ($predicates !== 'findAll')
-        {
+        if ($predicates !== 'findAll') {
             $this->documents = $this->filter($this->documents, $predicates);
         }
 
-        if ($this->cache !== false)
-        {
-            if ($cached_documents === false)
-            {
+        if ($this->cache !== false) {
+            if ($cached_documents === false) {
                 $dsave = [];
-                foreach($this->documents as $document)
-                {
+                foreach ($this->documents as $document) {
                     $dsave[] = $document->getId();
                 }
 
@@ -109,14 +101,11 @@ class QueryLogic
         $this->sort();
         $this->offsetLimit();
 
-        if (is_array($this->fields) && !empty($this->fields))
-        {
-            foreach($this->documents as $index => $document)
-            {
+        if (is_array($this->fields) && !empty($this->fields)) {
+            foreach ($this->documents as $index => $document) {
                 $fields = [];
-                foreach($this->fields as $fieldTarget)
-                {
-                    $fields[ $fieldTarget ] = $document->field($fieldTarget);
+                foreach ($this->fields as $fieldTarget) {
+                    $fields[$fieldTarget] = $document->field($fieldTarget);
                 }
 
                 $this->documents[$index] = $fields;
@@ -127,19 +116,17 @@ class QueryLogic
     }
 
     /**
-    * filter
-    *
-    */
+     * filter
+     *
+     */
     protected function filter($documents, $predicates)
     {
         $results = [];
 
         $org_docs = $documents;
 
-        if (isset($predicates['and']) && !empty($predicates['and']))
-        {
-            foreach($predicates['and'] as $predicate)
-            {
+        if (isset($predicates['and']) && !empty($predicates['and'])) {
+            foreach ($predicates['and'] as $predicate) {
                 list($field, $operator, $value) = $predicate;
 
                 $documents = array_values(array_filter($documents, function ($document) use ($field, $operator, $value) {
@@ -150,10 +137,8 @@ class QueryLogic
             }
         }
 
-        if (isset($predicates['or']) && !empty($predicates['or']))
-        {
-            foreach($predicates['or'] as $predicate)
-            {
+        if (isset($predicates['or']) && !empty($predicates['or'])) {
+            foreach ($predicates['or'] as $predicate) {
                 list($field, $operator, $value) = $predicate;
 
                 $documents = array_values(array_filter($org_docs, function ($document) use ($field, $operator, $value) {
@@ -168,25 +153,23 @@ class QueryLogic
     }
 
     /**
-    * offsetLimit
-    *
-    */
+     * offsetLimit
+     *
+     */
     protected function offsetLimit()
     {
-        if ($this->limit != 0 || $this->offset != 0)
-        {
+        if ($this->limit != 0 || $this->offset != 0) {
             $this->documents = array_slice($this->documents, $this->offset, $this->limit);
         }
     }
 
     /**
-    * sort
-    *
-    */
+     * sort
+     *
+     */
     protected function sort()
     {
-        if ($this->orderBy[0] == '')
-        {
+        if ($this->orderBy[0] == '') {
             return false;
         }
 
@@ -195,15 +178,14 @@ class QueryLogic
     }
 
     /**
-    * match
-    *
-    */
+     * match
+     *
+     */
     public function match($document, $field, $operator, $value)
     {
         $d_value = $document->field($field);
 
-        switch (true)
-        {
+        switch (true) {
             case ($operator === '=' && $d_value == $value):
                 return true;
             case ($operator === '==' && $d_value == $value):
@@ -216,21 +198,21 @@ class QueryLogic
                 return true;
             case (strtoupper($operator) === 'NOT' && $d_value != $value):
                 return true;
-            case ($operator === '>'  && $d_value >  $value):
+            case ($operator === '>' && $d_value > $value):
                 return true;
             case ($operator === '>=' && $d_value >= $value):
                 return true;
-            case ($operator === '<'  && $d_value <  $value):
+            case ($operator === '<' && $d_value < $value):
                 return true;
             case ($operator === '<=' && $d_value <= $value):
                 return true;
-            case (strtoupper($operator) === 'LIKE' && preg_match('/'.$value.'/is',$d_value)):
+            case (strtoupper($operator) === 'LIKE' && preg_match('/' . $value . '/is', $d_value)):
                 return true;
-            case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/'.$value.'/is',$d_value)):
+            case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/' . $value . '/is', $d_value)):
                 return true;
-            case (strtoupper($operator) === 'IN' && in_array($d_value, (array) $value)):
+            case (strtoupper($operator) === 'IN' && in_array($d_value, (array)$value)):
                 return true;
-            case (strtoupper($operator) === 'IN' && in_array($value, (array) $d_value)):
+            case (strtoupper($operator) === 'IN' && in_array($value, (array)$d_value)):
                 return true;
             case (strtoupper($operator) === 'REGEX' && preg_match($value, $d_value)):
                 return true;

@@ -1,5 +1,4 @@
-<?php  namespace Filebase;
-
+<?php namespace Dobrebydlo\Filebase;
 
 class Filesystem
 {
@@ -11,32 +10,37 @@ class Filesystem
      */
     public static function read($path)
     {
-        if(!file_exists($path))
-        {
+        try {
+            return file_get_contents($path);
+        } catch (\Exception $exception) {
             return false;
         }
-
-        $file = fopen($path, 'r');
-        $contents = fread($file, filesize($path));
-        fclose($file);
-
-        return $contents;
     }
 
     /**
      * Writes data to the filesystem.
      *
-     * @param  string $path     The absolute file path to write to
+     * @param  string $path The absolute file path to write to
      * @param  string $contents The contents of the file to write
      *
      * @return boolean          Returns true if write was successful, false if not.
      */
     public static function write($path, $contents)
     {
+        $last_separator_position = mb_strrpos($path, DIRECTORY_SEPARATOR);
+
+        if ($last_separator_position !== false) {
+
+            $directory = mb_substr($path, 0, $last_separator_position);
+
+            if (!is_dir($directory)) {
+                mkdir($directory, 0777, true);
+            }
+        }
+
         $fp = fopen($path, 'w+');
 
-        if(!flock($fp, LOCK_EX))
-        {
+        if (!flock($fp, LOCK_EX)) {
             return false;
         }
 
@@ -72,21 +76,18 @@ class Filesystem
      * @param boolean $safe_filename Allows filename to be converted if fails validation
      *
      * @return bool Returns true if valid. Throws an exception if not.
+     * @throws \Exception
      */
     public static function validateName($name, $safe_filename)
     {
-        if (!preg_match('/^[0-9A-Za-z\_\-]{1,63}$/', $name))
-        {
-            if ($safe_filename === true)
-            {
+        if (!preg_match('/^[0-9A-Za-z\_\-' . "\\" . DIRECTORY_SEPARATOR . ']{1,63}$/', $name)) {
+            if ($safe_filename === true) {
                 // rename the file
-                $name = preg_replace('/[^0-9A-Za-z\_\-]/','', $name);
+                $name = preg_replace('/[^0-9A-Za-z\_\-' . '/^[0-9A-Za-z\_\-' . "\\" . DIRECTORY_SEPARATOR . ']{1,63}$/' . ']/', '', $name);
 
                 // limit the file name size
-                $name = substr($name,0,63);
-            }
-            else
-            {
+                $name = substr($name, 0, 63);
+            } else {
                 throw new \Exception(sprintf('`%s` is not a valid file name.', $name));
             }
         }
@@ -95,20 +96,32 @@ class Filesystem
     }
 
     /**
-     * Get an array containing the path of all files in this repository
+     * Get array of stripped file names. Relative paths without extensions
      *
-     * @return array An array, item is a file
+     * @param string $path
+     * @param string $ext
+     * @return array File names
      */
-    public static function getAllFiles($path = '',$ext = 'json')
+    public static function getAllFiles(string $path = '', string $ext = 'json')
     {
-        $files = [];
-        $_files = glob($path.'*.'.$ext);
-        foreach($_files as $file)
-        {
-            $files[] = str_replace('.'.$ext,'',basename($file));
+
+        $path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        $path_pattern = addslashes($path);
+
+        $ext = '.' . ltrim($ext, '.');
+        $ext_pattern = "\\{$ext}";
+
+        $file_names = [];
+
+        $directory = new \RecursiveDirectoryIterator($path);
+        $iterator = new \RecursiveIteratorIterator($directory);
+        $files = new \RegexIterator($iterator, "#^{$path_pattern}(?<name>.+){$ext_pattern}$#i", \RecursiveRegexIterator::GET_MATCH);
+
+        foreach ($files as $file) {
+            $file_names[] = $file['name'];
         }
 
-        return $files;
+        return $file_names;
     }
 
 }

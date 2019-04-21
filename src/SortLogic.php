@@ -1,4 +1,4 @@
-<?php  namespace Filebase;
+<?php namespace Dobrebydlo\Filebase;
 
 /**
  * Recursive sort logic class
@@ -48,17 +48,15 @@ class SortLogic
      *
      * @param Document $docA
      * @param Document $docB
-     * @return return int (-1, 0, 1)
+     * @return int (-1, 0, 1)
      */
     public function sort($docA, $docB)
     {
         $propA = $docA->field($this->orderBy[$this->index]);
         $propB = $docB->field($this->orderBy[$this->index]);
 
-        if (strnatcasecmp($propA, $propB) == 0)
-        {
-            if (!isset($this->orderBy[$this->index + 1]))
-            {
+        if (strnatcasecmp($propA, $propB) == 0) {
+            if (!isset($this->orderBy[$this->index + 1])) {
                 return 0;
             }
 
@@ -67,12 +65,9 @@ class SortLogic
             return $sortlogic->sort($docA, $docB);
         }
 
-        if ($this->sortDirection[$this->index] == 'DESC')
-        {
+        if ($this->sortDirection[$this->index] == 'DESC') {
             return strnatcasecmp($propB, $propA);
-        }
-        else
-        {
+        } else {
             return strnatcasecmp($propA, $propB);
         }
     }

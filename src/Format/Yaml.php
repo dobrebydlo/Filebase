@@ -1,4 +1,4 @@
-<?php  namespace Filebase\Format;
+<?php  namespace Dobrebydlo\Filebase\Format;
 
 use Symfony\Component\Yaml\Yaml as YamlParser;
 
@@ -7,31 +7,27 @@ class Yaml implements FormatInterface
     /**
      * @return string
      */
-    public static function getFileExtension()
+    public static function getFileExtension(): string
     {
         return 'yaml';
     }
 
     /**
      * @param array $data
-     * @param bool $pretty
      * @return string
-     * @throws FormatException
      */
-    public static function encode($data = [], $pretty = true)
+    public static function encode(?array $data = []): string
     {
-        $encoded = YamlParser::dump((array)$data);
+        $encoded = YamlParser::dump($data);
         return $encoded;
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return mixed
-     * @throws FormatException
      */
-    public static function decode($data)
+    public static function decode(?string $data): array
     {
-        $decoded = YamlParser::parse($data);
-        return $decoded;
+        return (array)YamlParser::parse($data);
     }
 }

@@ -1,4 +1,4 @@
-<?php namespace Filebase\Filesystem;
+<?php namespace Dobrebydlo\Filebase\Filesystem;
 
 class SavingException extends FilesystemException
 {

@@ -1,36 +1,36 @@
-<?php  namespace Filebase;
+<?php namespace Dobrebydlo\Filebase;
 
 
 class Backup
 {
 
     /**
-    * $backupLocation
-    *
-    * Current backup location..
-    * $backupLocation
-    */
+     * $backupLocation
+     *
+     * Current backup location..
+     * $backupLocation
+     */
     protected $backupLocation;
 
     /**
-    * $config
-    *
-    * Stores all the configuration object settings
-    * \Filebase\Config
-    */
+     * $config
+     *
+     * Stores all the configuration object settings
+     * \Dobrebydlo\Filebase\Config
+     */
     protected $config;
 
     /**
-    * $database
-    *
-    * \Filebase\Database
-    */
+     * $database
+     *
+     * \Dobrebydlo\Filebase\Database
+     */
     protected $database;
 
     /**
-    * __construct
-    *
-    */
+     * __construct
+     *
+     */
     public function __construct($backupLocation = '', Database $database)
     {
         $this->backupLocation = $backupLocation;
@@ -38,29 +38,26 @@ class Backup
         $this->database = $database;
 
         // Check directory and create it if it doesn't exist
-        if (!is_dir($this->backupLocation))
-        {
-            if (!@mkdir($this->backupLocation, 0777, true))
-            {
+        if (!is_dir($this->backupLocation)) {
+            if (!@mkdir($this->backupLocation, 0777, true)) {
                 throw new \Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->backupLocation));
             }
-        }
-        else if (!is_writable($this->backupLocation))
-        {
-            throw new \Exception(sprintf('`%s` is not writable.', $this->backupLocation));
+        } else {
+            if (!is_writable($this->backupLocation)) {
+                throw new \Exception(sprintf('`%s` is not writable.', $this->backupLocation));
+            }
         }
     }
 
     /**
-    * save()
-    *
-    */
+     * save()
+     *
+     */
     public function create()
     {
-        $backupFile = $this->backupLocation.'/'.time().'.zip';
+        $backupFile = $this->backupLocation . '/' . time() . '.zip';
 
-        if ($results = $this->zip($this->config->dir, $backupFile))
-        {
+        if ($results = $this->zip($this->config->dir, $backupFile)) {
             $basename = basename($backupFile);
             return $basename;
         }
@@ -69,19 +66,18 @@ class Backup
     }
 
     /**
-    * find()
-    *
-    * Returns an array of all the backups currently available
-    *
-    */
+     * find()
+     *
+     * Returns an array of all the backups currently available
+     *
+     */
     public function find()
     {
         $backups = [];
-        $files = glob(realpath($this->backupLocation)."/*.zip");
-        foreach($files as $file)
-        {
-            $basename = str_replace('.zip','',basename($file));
-            $backups[$basename] = $this->backupLocation.'/'.$basename.'.zip';
+        $files = glob(realpath($this->backupLocation) . "/*.zip");
+        foreach ($files as $file) {
+            $basename = str_replace('.zip', '', basename($file));
+            $backups[$basename] = $this->backupLocation . '/' . $basename . '.zip';
         }
 
         krsort($backups);
@@ -90,22 +86,22 @@ class Backup
     }
 
     /**
-    * clean()
-    *
-    * Clears and deletes all backups (zip files only)
-    *
-    */
+     * clean()
+     *
+     * Clears and deletes all backups (zip files only)
+     *
+     */
     public function clean()
     {
-        return array_map('unlink', glob(realpath($this->backupLocation)."/*.zip"));
+        return array_map('unlink', glob(realpath($this->backupLocation) . "/*.zip"));
     }
 
     /**
-    * rollback()
-    *
-    * Rollback database to the last backup available
-    *
-    */
+     * rollback()
+     *
+     * Rollback database to the last backup available
+     *
+     */
     public function rollback()
     {
         $backups = $this->find();
@@ -125,13 +121,11 @@ class Backup
      */
     protected function extract($source = '', $target = '')
     {
-        if (!extension_loaded('zip') && !file_exists($source))
-        {
+        if (!extension_loaded('zip') && !file_exists($source)) {
             return false;
         }
         $zip = new \ZipArchive();
-        if ($zip->open($source) === TRUE)
-        {
+        if ($zip->open($source) === TRUE) {
             $zip->extractTo($target);
             $zip->close();
 
@@ -141,45 +135,39 @@ class Backup
     }
 
     /**
-    * zip()
-    *
-    * Prevents the zip from zipping up the storage diretories
-    *
-    */
+     * zip()
+     *
+     * Prevents the zip from zipping up the storage diretories
+     *
+     */
     protected function zip($source = '', $target = '')
     {
-        if (!extension_loaded('zip') || !file_exists($source))
-        {
+        if (!extension_loaded('zip') || !file_exists($source)) {
             return false;
         }
 
         $zip = new \ZipArchive();
-        if (!$zip->open($target, \ZIPARCHIVE::CREATE))
-        {
+        if (!$zip->open($target, \ZIPARCHIVE::CREATE)) {
             $zip->addFromString(basename($source), file_get_contents($source));
         }
         $source = realpath($source);
-        if (is_dir($source))
-        {
+        if (is_dir($source)) {
             $iterator = new \RecursiveDirectoryIterator($source);
             $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
             $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-            foreach ($files as $file)
-            {
+            foreach ($files as $file) {
                 $file = realpath($file);
 
-                if (preg_match('|'.realpath($this->backupLocation).'|',$file))
-                {
+                if (preg_match('|' . realpath($this->backupLocation) . '|', $file)) {
                     continue;
                 }
 
-                if (is_dir($file))
-                {
+                if (is_dir($file)) {
                     $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
-                }
-                else if (is_file($file))
-                {
-                    $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+                } else {
+                    if (is_file($file)) {
+                        $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+                    }
                 }
             }
 
