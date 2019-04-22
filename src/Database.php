@@ -5,6 +5,7 @@ use Ffdb\Format\EncodingException;
 use Ffdb\Filesystem\SavingException;
 use Ffdb\Filesystem\ReadingException;
 use Ffdb\Filesystem\FilesystemException;
+use Ffdb\Format\FormatInterface;
 
 class Database
 {
@@ -118,7 +119,7 @@ class Database
         $document = new Document($this);
         $document->setId($id);
 
-        if ($content) {
+        if (!empty($content)) {
             if (isset($content['__created_at'])) {
                 $document->setCreatedAt($content['__created_at']);
             }
@@ -266,23 +267,25 @@ class Database
      * @param $name
      *
      * @throws Exception|ReadingException
-     * @return array|null
+     * @return array
      */
     protected function read($name)
     {
         $format = $this->config->format;
 
-        $file = Filesystem::read(
-            $this->config->dir . DIRECTORY_SEPARATOR
-            . Filesystem::validateName($name, $this->config->safe_filename)
-            . '.' . $format::getFileExtension()
-        );
+        if (is_subclass_of($format, FormatInterface::class)) {
 
-        if ($file !== false) {
-            return $format::decode($file);
+            $safe_name = Filesystem::validateName($name, $this->config->safe_filename);
+            $file_name = $this->config->dir . DIRECTORY_SEPARATOR . $safe_name . '.' . $format::getFileExtension();
+            $file = Filesystem::read($file_name);
+
+            if ($file !== false) {
+                $data = $format::decode($file);
+            }
+
         }
 
-        return null;
+        return isset($data) && is_array($data) ? $data : [];
     }
 
     /**

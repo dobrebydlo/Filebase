@@ -1,5 +1,11 @@
 Change Log
 ==========
+### 04/22/2019 - 1.1.2
+* Modified PicoHtml format to force snake_case on data array keys
+
+### 04/21/2019 - 1.1.1
+* Renamed the package
+
 ### 04/21/2019 - 1.1.0
 * Added support for nested directories and names containing slashes
 * Made format interface stricter and modified the existing formats to comply with it

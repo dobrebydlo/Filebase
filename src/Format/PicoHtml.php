@@ -22,14 +22,16 @@ class PicoHtml implements FormatInterface
     public static function encode(?array $data = []): string
     {
         $encoded = '';
-
         $data = (array)$data;
 
         if (array_key_exists('data', $data)) {
             if (is_array($data['data']) || is_object($data['data'])) {
-                $data = array_replace($data, (array)$data['data']);
+                $item_data = (array)$data['data'];
+                unset($data['data']);
+                $snake_keys = array_map([static::class, 'snakeCase'], array_keys($item_data));
+                $item_data = array_combine($snake_keys, array_values($item_data));
+                $data = array_replace($item_data, $data);
             }
-            unset($data['data']);
         }
 
         if (array_key_exists('content', $data)) {
@@ -75,16 +77,19 @@ ENCODED;
 
             try {
 
-                $parsed = YamlParser::parse($yaml);
+                $item_data = YamlParser::parse($yaml);
 
                 foreach (static::$rootKeys as $key) {
-                    if (array_key_exists($key, $parsed)) {
-                        $decoded[$key] = $parsed[$key];
-                        unset($parsed[$key]);
+                    if (array_key_exists($key, $item_data)) {
+                        $decoded[$key] = $item_data[$key];
+                        unset($item_data[$key]);
                     }
                 }
 
-                $decoded['data'] = $parsed;
+                $snake_keys = array_map([static::class, 'snakeCase'], array_keys($item_data));
+                $item_data = array_combine($snake_keys, array_values($item_data));
+
+                $decoded['data'] = $item_data;
 
             } catch (\Exception $exception) {
 
@@ -108,5 +113,19 @@ ENCODED;
         }
 
         return $decoded;
+    }
+
+    /**
+     * Convert string to snake case
+     *
+     * @param string $value
+     * @return string
+     */
+    protected static function snakeCase(string $value): string
+    {
+            $value = ucwords($value, " \t\r\n\f\v-_");
+            $value = preg_replace('#[\s\-_]+#u', '', $value);
+            $value = preg_replace('#(.)(?=[A-Z])#u', '$1_', $value);
+            return mb_strtolower($value, 'UTF-8');
     }
 }
