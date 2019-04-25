@@ -123,7 +123,7 @@ class Config
 
         // check now if that class is part of our interface
         if (!$format_class instanceof FormatInterface) {
-            throw new \Exception('Filebase Error: Format Class must be an instance of Filebase\Format\FormatInterface');
+            throw new \Exception('Filebase Error: Format Class must be an instance of FfdbFormat\FormatInterface');
         }
     }
 }

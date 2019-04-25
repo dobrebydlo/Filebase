@@ -1,6 +1,6 @@
 <?php namespace Ffdb;
 
-use Filebase\SortLogic;
+use FfdbSortLogic;
 
 class QueryLogic
 {
